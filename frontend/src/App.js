@@ -1,11 +1,25 @@
 import React from 'react';
-import { ChakraProvider, Text, theme } from '@chakra-ui/react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
+import Home from './pages/Home';
+import Activity from './pages/Activity';
+import Config from './pages/Config';
 
 function App() {
   return (
-    <ChakraProvider theme={theme}>
-      <Text>Hello world!</Text>
-    </ChakraProvider>
+    <Router>
+      <Switch>
+        <Route path="/config/:id">
+          <Config />
+        </Route>
+        <Route path="/:id">
+          <Activity />
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
