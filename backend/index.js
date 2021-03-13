@@ -16,14 +16,28 @@ app.get('/', (req, res) => {
   res.send('Eartrainr API says hello!');
 });
 
-app.post('/activity', async (req, res) => {
-  const activity = new Activity(req.body);
-  await activity.save();
+app.post('/activity', async (req, res, next) => {
+  try {
+    const activity = new Activity(req.body);
+    await activity.save();
+    res.json(activity);
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.get('/activity/:id', async (req, res) => {
-  const activity = await Activity.findById(req.params.id);
-  res.json(activity);
+app.get('/activity', async (req, res) => {
+  const activities = await Activity.find({});
+  res.json(activities);
+});
+
+app.get('/activity/:id', async (req, res, next) => {
+  try {
+    const activity = await Activity.findById(req.params.id);
+    res.json(activity);
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.put('/activity/:id', (req, res) => {
@@ -32,6 +46,13 @@ app.put('/activity/:id', (req, res) => {
 
 app.delete('/activity/:id', (req, res) => {
   // TODO delete activity object with specific id
+});
+
+// Error handler
+app.use(function (err, req, res, next) {
+  res.status(500).send({
+    error: err.message,
+  });
 });
 
 app.listen(options.port, () => {
