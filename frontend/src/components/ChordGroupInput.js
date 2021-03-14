@@ -1,4 +1,6 @@
-import { IconButton } from '@chakra-ui/button';
+/* eslint-disable react/prop-types */
+import React from 'react';
+
 import {
   Flex,
   Heading,
@@ -11,13 +13,11 @@ import {
   EditablePreview,
   Checkbox,
   Text,
+  IconButton,
 } from '@chakra-ui/react';
 import { AddIcon, MinusIcon, DeleteIcon } from '@chakra-ui/icons';
-import React, { useState } from 'react';
 
-export default function ChordGroupInput() {
-  const [groups, setGroups] = useState([]);
-
+export default function ChordGroupInput({ groups, setGroups }) {
   const chordOptions = [
     'C',
     'Cm',

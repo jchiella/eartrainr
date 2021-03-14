@@ -29,6 +29,7 @@ export default function Config() {
   const history = useHistory();
 
   const [activity, setActivity] = useState(null);
+  const [groups, setGroups] = useState([]);
 
   useEffect(() => {
     fetch(`http://localhost:3003/activity/${id}`)
@@ -37,13 +38,18 @@ export default function Config() {
   }, [id]);
 
   const updateConfig = () => {
+    const properGroups = groups.map((group) => {
+      const newGroup = Object.assign({}, group);
+      delete newGroup.hidden;
+      return newGroup;
+    });
     fetch(`http://localhost:3003/activity/${id}`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(activity),
+      body: JSON.stringify({ ...activity, groups: properGroups }),
     }).then(() => history.push(`/${id}`));
   };
 
@@ -104,7 +110,7 @@ export default function Config() {
       {activity.type === null ? (
         <Spinner />
       ) : activity.type === 'chord' ? (
-        <ChordGroupInput />
+        <ChordGroupInput groups={groups} setGroups={setGroups} />
       ) : activity.type === 'interval' ? (
         <IntervalGroupInput />
       ) : activity.type === 'rhythm' ? (
