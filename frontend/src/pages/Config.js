@@ -20,6 +20,10 @@ import {
   Button,
 } from '@chakra-ui/react';
 
+import ChordGroupInput from '../components/ChordGroupInput';
+import IntervalGroupInput from '../components/IntervalGroupInput';
+import RhythmGroupInput from '../components/RhythmGroupInput';
+
 export default function Config() {
   const { id } = useParams();
   const history = useHistory();
@@ -97,7 +101,7 @@ export default function Config() {
           }
         />
       </FormControl>
-      {/* {activity.type === null ? (
+      {activity.type === null ? (
         <Spinner />
       ) : activity.type === 'chord' ? (
         <ChordGroupInput />
@@ -105,7 +109,7 @@ export default function Config() {
         <IntervalGroupInput />
       ) : activity.type === 'rhythm' ? (
         <RhythmGroupInput />
-      ) : null} */}
+      ) : null}
       <Button colorScheme="blue" m="2" onClick={updateConfig}>
         Save Options
       </Button>
