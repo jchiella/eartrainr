@@ -1,18 +1,35 @@
 import { IconButton } from '@chakra-ui/button';
-import { Flex, Heading, ListItem, List, ListIcon } from '@chakra-ui/layout';
+import {
+  Flex,
+  Heading,
+  ListItem,
+  List,
+  ListIcon,
+  SimpleGrid,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  Checkbox,
+  Text,
+} from '@chakra-ui/react';
 import { AddIcon, MinusIcon, DeleteIcon } from '@chakra-ui/icons';
 import React, { useState } from 'react';
-import { Editable, EditableInput, EditablePreview } from '@chakra-ui/editable';
-import { Checkbox } from '@chakra-ui/checkbox';
 
 export default function ChordGroupInput() {
   const [groups, setGroups] = useState([]);
 
   const chordOptions = [
-    'Major Triad',
-    'Minor Triad',
-    'Augmented Triad',
-    'Diminished Triad',
+    'C',
+    'Cm',
+    'Cdim',
+    'Caug',
+    'C7',
+    'CMaj7',
+    'CmM7',
+    'Cm7',
+    'Cm7(b5)',
+    'CMaj7(#5)',
+    'Csus4',
   ];
 
   const addGroup = (e) => {
@@ -40,6 +57,10 @@ export default function ChordGroupInput() {
       <Heading size="sm" textAlign="center">
         Configure Groups
       </Heading>
+      <Text>
+        The chord examples shown below use C as a root, but the activity will
+        use chords from all keys.
+      </Text>
       <List>
         {console.log(JSON.stringify(groups)) ||
           groups.map((group, i) => (
@@ -82,7 +103,7 @@ export default function ChordGroupInput() {
               </Flex>
 
               {!group.hidden && (
-                <Flex direction="column">
+                <SimpleGrid columns={3}>
                   {chordOptions.map((option, j) => (
                     <Checkbox
                       isChecked={group.values.includes(option)}
@@ -107,7 +128,7 @@ export default function ChordGroupInput() {
                       {option}
                     </Checkbox>
                   ))}
-                </Flex>
+                </SimpleGrid>
               )}
             </ListItem>
           ))}
