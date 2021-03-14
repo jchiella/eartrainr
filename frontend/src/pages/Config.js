@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import {
   Text,
@@ -22,6 +22,7 @@ import {
 
 export default function Config() {
   const { id } = useParams();
+  const history = useHistory();
 
   const [activity, setActivity] = useState(null);
 
@@ -32,7 +33,14 @@ export default function Config() {
   }, [id]);
 
   const updateConfig = () => {
-    // TODO save configuration back to server
+    fetch(`http://localhost:3003/activity/${id}`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(activity),
+    }).then(() => history.push(`/${id}`));
   };
 
   return activity === null ? (
@@ -99,7 +107,7 @@ export default function Config() {
         <RhythmGroupInput />
       ) : null} */}
       <Button colorScheme="blue" m="2" onClick={updateConfig}>
-        Update Options
+        Save Options
       </Button>
     </Flex>
   );

@@ -12,6 +12,7 @@ app.use(express.json());
 mongoose.connect(options.dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 
 app.get('/', (req, res) => {
@@ -35,15 +36,27 @@ app.get('/activity', async (req, res) => {
 
 app.get('/activity/:id', async (req, res, next) => {
   try {
-    const activity = await Activity.findById(req.params.id);
+    const activity = await Activity.findById(req.params.id).orFail();
     res.json(activity);
   } catch (err) {
     next(err);
   }
 });
 
-app.put('/activity/:id', (req, res) => {
+app.put('/activity/:id', async (req, res, next) => {
   // TODO update activity object with specific id
+  try {
+    const activity = await Activity.findOneAndReplace(
+      { _id: req.params.id },
+      req.body,
+      {
+        new: true,
+      }
+    );
+    res.json(activity);
+  } catch (err) {
+    next(err);
+  }
 });
 
 app.delete('/activity/:id', (req, res) => {
