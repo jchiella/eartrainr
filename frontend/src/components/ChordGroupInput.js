@@ -1,13 +1,6 @@
-import { Button, IconButton } from '@chakra-ui/button';
-import {
-  Box,
-  Flex,
-  Heading,
-  ListItem,
-  Text,
-  UnorderedList,
-} from '@chakra-ui/layout';
-import { AddIcon } from '@chakra-ui/icons';
+import { IconButton } from '@chakra-ui/button';
+import { Flex, Heading, ListItem, List, ListIcon } from '@chakra-ui/layout';
+import { AddIcon, MinusIcon, DeleteIcon } from '@chakra-ui/icons';
 import React, { useState } from 'react';
 import { Editable, EditableInput, EditablePreview } from '@chakra-ui/editable';
 import { Checkbox } from '@chakra-ui/checkbox';
@@ -22,14 +15,6 @@ export default function ChordGroupInput() {
     'Diminished Triad',
   ];
 
-  /*
-  each group object is of the form: 
-  {
-    name: Name of group
-    values: [ list of chord qualities ]
-  }
-  */
-
   const addGroup = (e) => {
     e.preventDefault();
     setGroups([
@@ -37,12 +22,14 @@ export default function ChordGroupInput() {
       {
         name: '',
         values: [],
+        hidden: false,
       },
     ]);
   };
 
   return (
-    <Box
+    <Flex
+      direction="column"
       w="100%"
       border="1px"
       borderColor="blue.100"
@@ -53,54 +40,88 @@ export default function ChordGroupInput() {
       <Heading size="sm" textAlign="center">
         Configure Groups
       </Heading>
-      <IconButton
-        aria-label="Add group"
-        icon={<AddIcon />}
-        onClick={addGroup}
-      />
-      <UnorderedList>
+      <List>
         {console.log(JSON.stringify(groups)) ||
           groups.map((group, i) => (
             <ListItem key={i}>
-              <Editable
-                value={group.name}
-                defaultValue="New Group"
-                placeholder="New Group"
-                onChange={(val) =>
-                  setGroups(
-                    groups.map((g, j) =>
-                      i === j ? { name: val, values: group.values } : g
-                    )
-                  )
-                }
-              >
-                <EditablePreview />
-                <EditableInput />
-              </Editable>
-              <Flex direction="column">
-                {chordOptions.map((option, i) => (
-                  <Checkbox
-                    onChange={() =>
-                      setGroups(
-                        groups.map((g, j) =>
-                          i === j
-                            ? {
-                                name: group.name,
-                                values: [...group.values, option],
-                              }
-                            : g
-                        )
+              <Flex align="center">
+                <ListIcon
+                  cursor="pointer"
+                  as={group.hidden ? AddIcon : MinusIcon}
+                  onClick={() =>
+                    setGroups(
+                      groups.map((g, j) =>
+                        i === j ? { ...group, hidden: !group.hidden } : g
                       )
-                    }
-                    key={i}
-                  >
-                    {option}
-                  </Checkbox>
-                ))}
+                    )
+                  }
+                />
+                <Editable
+                  value={group.name}
+                  defaultValue="New Group"
+                  placeholder="New Group"
+                  w="100%"
+                  onChange={(val) =>
+                    setGroups(
+                      groups.map((g, j) =>
+                        i === j ? { ...group, name: val } : g
+                      )
+                    )
+                  }
+                >
+                  <EditablePreview />
+                  <EditableInput />
+                </Editable>
+                <DeleteIcon
+                  cursor="pointer"
+                  alignSelf="flex-end"
+                  onClick={() =>
+                    setGroups(groups.filter((_, idx) => i !== idx))
+                  }
+                />
               </Flex>
+
+              {!group.hidden && (
+                <Flex direction="column">
+                  {chordOptions.map((option, j) => (
+                    <Checkbox
+                      isChecked={group.values.includes(option)}
+                      onChange={(e) =>
+                        setGroups(
+                          groups.map((g, k) =>
+                            k === i
+                              ? {
+                                  ...group,
+                                  values: e.target.checked
+                                    ? [...group.values, option]
+                                    : group.values.filter(
+                                        (gr) => gr !== option
+                                      ),
+                                }
+                              : g
+                          )
+                        )
+                      }
+                      key={j}
+                    >
+                      {option}
+                    </Checkbox>
+                  ))}
+                </Flex>
+              )}
             </ListItem>
           ))}
-      </UnorderedList>
-    </Box>
+      </List>
+
+      <IconButton
+        aria-label="Add group"
+        icon={<AddIcon />}
+        colorScheme="blue"
+        onClick={addGroup}
+        w="fit-content"
+        mt="5"
+        alignSelf="flex-end"
+      />
+    </Flex>
   );
 }
