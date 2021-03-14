@@ -34,7 +34,10 @@ export default function Config() {
   useEffect(() => {
     fetch(`http://localhost:3003/activity/${id}`)
       .then((res) => res.json())
-      .then(setActivity);
+      .then((activity) => {
+        setActivity(activity);
+        setGroups(activity.groups.map((group) => ({ ...group, hidden: true })));
+      });
   }, [id]);
 
   const updateConfig = () => {

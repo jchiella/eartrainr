@@ -53,6 +53,8 @@ export default function ChordGroupInput({ groups, setGroups }) {
       borderRadius="md"
       m="2"
       p="2"
+      maxH="lg"
+      overflow="scroll"
     >
       <Heading size="sm" textAlign="center">
         Configure Groups

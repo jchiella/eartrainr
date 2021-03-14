@@ -15,6 +15,9 @@ mongoose.connect(options.dbUrl, {
   useFindAndModify: false,
 });
 
+// workaround for empty strings being considered null
+mongoose.Schema.Types.String.checkRequired((v) => v != null);
+
 app.get('/', (req, res) => {
   res.send('Eartrainr API says hello!');
 });

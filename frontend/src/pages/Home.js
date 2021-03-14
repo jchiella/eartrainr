@@ -2,9 +2,28 @@ import React from 'react';
 
 import { Container, Heading, Button, Flex, Text } from '@chakra-ui/react';
 
+import { useHistory } from 'react-router-dom';
+
 export default function Home() {
+  const history = useHistory();
+
   const createActivity = () => {
-    alert('Hiya!');
+    fetch(`http://localhost:3003/activity`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: '',
+        type: 'chord',
+        count: 0,
+        cumulative: false,
+        groups: [],
+      }),
+    })
+      .then((res) => res.json())
+      .then(({ _id }) => history.push(`/config/${_id}`));
   };
 
   return (
